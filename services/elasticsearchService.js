@@ -157,63 +157,10 @@ async function check(){
 let q = await client.search({
   index : index,
   body: {
-    query: {
-      
-   "bool":{ 
-      "must":[ 
-         { 
-            "bool":{ 
-               "should":[ 
-                  { 
-                     "wildcard":{ 
-                        "home":"portugal*"
-                     }
-                  },
-                  { 
-                     "wildcard":{ 
-                        "away":"portugal*"
-                     }
-                  }
-               ]
-            }
-          },
-         { 
-            "bool":{ 
-               "should":[ 
-                  { 
-                     "match":{ 
-                        "label":"bet365"
-                     }
-                  },
-                  { 
-                     "match":{ 
-                        "label":"winmasters"
-                     }
-                  }
-               ]
-            }
-         },
+    query: 
+      {"bool":{"must":[{"bool":{"should":[{"wildcard":{"home":"*portug*"}},{"wildcard":{"away":"*portug*"}}]}},{"bool":{"should":[{"match":{"label":"bet365"}},{"match":{"label":"stoiximan"}},{"match":{"label":"winmasters"}}]}},{"bool":{"should":[{"range":{"markets.FT1":{"lte":1095,"gte":1060}}},{"range":{"markets.FTX":{"lte":1095,"gte":1060}}},{"range":{"markets.FT2":{"lte":1095,"gte":1060}}}]}}]}}
 
-
-         { 
-          "bool":{ 
-            "should":[ 
-             { 
-              "range":{
-                "markets.FT2":{
-                  "gte" : 100,
-                  "lte" : 108.5
-                },
-              },
-           }
-             ]
-          }
-       }
-
-      ]
-   }
-
-    }
+    
   }
 })
 console.log(q.body.hits.hits);

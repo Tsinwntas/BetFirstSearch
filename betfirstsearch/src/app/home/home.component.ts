@@ -46,8 +46,8 @@ export class HomeComponent implements OnInit {
       "bool" : {
         "must" : [
           {"bool" : this.getMatchNameQuery()},
-          // {"bool" : this.getWebsiteQuery()},
-          // {"bool" : this.getOddsQuery()}
+          {"bool" : this.getWebsiteQuery()},
+          {"bool" : this.getOddsQuery()}
         ]
       }
     })
@@ -78,8 +78,8 @@ export class HomeComponent implements OnInit {
 
   getOddsQuery() {
     let query = [];
-    let gte = this.oddsBottomLimit ? this.oddsBottomLimit : 0;
-    let lte = this.oddsUpperLimit ? this.oddsUpperLimit : 1000;
+    let gte = this.oddsBottomLimit ? this.oddsBottomLimit*1000 : 0;
+    let lte = this.oddsUpperLimit ? this.oddsUpperLimit*1000+5 : 1000;
 
     let selectedOdds = [];
     this.selections.forEach(s => {if(s.isSelected) selectedOdds.push(s)});
@@ -90,14 +90,13 @@ export class HomeComponent implements OnInit {
   getOddsQueryByArray(array, gte, lte){
     let query = [];
     array.forEach((s: SelectionModel)=>{
-      query.push({
-        "range":{
-          "FT.0":{
-            "lte" : s.index == 0 ? lte: 1000,
-            "gte" : s.index == 0 ? gte: 0
-          }
-        }
-      })
+      let rangeForSelection = {"range":{}};
+      rangeForSelection.range["markets.FT"+s.label] = {
+        lte: lte,
+        gte: gte
+      }
+
+      query.push(rangeForSelection);
     })
     return query;
   }
