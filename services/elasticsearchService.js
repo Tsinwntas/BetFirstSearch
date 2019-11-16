@@ -26,53 +26,122 @@ module.exports = {
         bulkBody.push(element);
       });
       await client.bulk({body:bulkBody}).catch(console.log);
+      console.log("Insertion completed.")
     }
 
 
 }
 
 async function run () {
-  // Let's start by indexing some data
-  await client.index({
-    index: 'game-of-thrones',
-    // type: '_doc', // uncomment this line if you are using Elasticsearch ≤ 6
-    body: {
-      character: 'Ned Stark',
-      quote: 'Winter is coming.'
-    }
-  })
-
-  await client.index({
-    index: 'game-of-thrones',
-    // type: '_doc', // uncomment this line if you are using Elasticsearch ≤ 6
-    body: {
-      character: 'Daenerys Targaryen',
-      quote: 'I am the blood of the dragon.'
-    }
-  })
-
-  await client.index({
-    index: 'game-of-thrones',
-    // type: '_doc', // uncomment this line if you are using Elasticsearch ≤ 6
-    body: {
-      character: 'Tyrion Lannister',
-      quote: 'A mind needs winter books like a sword needs a whetstone.'
-      
-    }
-  })
-
-  // here we are forcing an index refresh, otherwise we will not
-  // get any result in the consequent search
-  await client.indices.refresh({ index: 'game-of-thrones' })
 
   // Let's search!
   const { body } = await client.search({
-    index: 'game-of-thrones',
+    "index": 'mappa',
     // type: '_doc', // uncomment this line if you are using Elasticsearch ≤ 6
-    body: {
-      query: {
-        match_all: {}
-      }
+    "body": {
+      "query": { 
+        "bool":{ 
+           "must":[ 
+              { 
+                 "bool":{ 
+                    "should":[ 
+                       { 
+                          "match":{ 
+                             "home":"*"
+                          }
+                       },
+                       { 
+                          "match":{ 
+                             "away":"*"
+                          }
+                       }
+                    ]
+                 }
+              },
+              { 
+                 "bool":{ 
+                    "should":[ 
+                       { 
+                          "match":{ 
+                             "label":"bet365"
+                          }
+                       },
+                       { 
+                          "match":{ 
+                             "label":"stoiximan"
+                          }
+                       },
+                       { 
+                          "match":{ 
+                             "label":"winmasters"
+                          }
+                       }
+                    ]
+                 }
+              },
+              { 
+                 "bool":{ 
+                    "should":[ 
+                       { 
+                          "range":{ 
+                             "FT":{ 
+                                "0":{ 
+                                   "lte":3,
+                                   "gte":1.5
+                                },
+                                "1":{ 
+                                   "lte":1000,
+                                   "gte":0
+                                },
+                                "2":{ 
+                                   "lte":1000,
+                                   "gte":0
+                                }
+                             }
+                          }
+                       },
+                       { 
+                          "range":{ 
+                             "FT":{ 
+                                "0":{ 
+                                   "lte":1000,
+                                   "gte":0
+                                },
+                                "1":{ 
+                                   "lte":3,
+                                   "gte":1.5
+                                },
+                                "2":{ 
+                                   "lte":1000,
+                                   "gte":0
+                                }
+                             }
+                          }
+                       },
+                       { 
+                          "range":{ 
+                             "FT":{ 
+                                "0":{ 
+                                   "lte":1000,
+                                   "gte":0
+                                },
+                                "1":{ 
+                                   "lte":1000,
+                                   "gte":0
+                                },
+                                "2":{ 
+                                   "lte":3,
+                                   "gte":1.5
+                                }
+                             }
+                          }
+                       }
+                    ]
+                 }
+              }
+           ]
+        }
+     }
     }
   })
 
@@ -89,11 +158,67 @@ let q = await client.search({
   index : index,
   body: {
     query: {
-      match_all: {}
+      
+   "bool":{ 
+      "must":[ 
+         { 
+            "bool":{ 
+               "should":[ 
+                  { 
+                     "wildcard":{ 
+                        "home":"portugal*"
+                     }
+                  },
+                  { 
+                     "wildcard":{ 
+                        "away":"portugal*"
+                     }
+                  }
+               ]
+            }
+          },
+         { 
+            "bool":{ 
+               "should":[ 
+                  { 
+                     "match":{ 
+                        "label":"bet365"
+                     }
+                  },
+                  { 
+                     "match":{ 
+                        "label":"winmasters"
+                     }
+                  }
+               ]
+            }
+         },
+
+
+         { 
+          "bool":{ 
+            "should":[ 
+             { 
+              "range":{
+                "markets.FT2":{
+                  "gte" : 100,
+                  "lte" : 108.5
+                },
+              },
+           }
+             ]
+          }
+       }
+
+      ]
+   }
+
     }
   }
 })
-console.log(q.body.hits);
+console.log(q.body.hits.hits);
+// console.log(q.body.hits.hits._source.markets);
 }
 
-// check();
+// run();
+check();

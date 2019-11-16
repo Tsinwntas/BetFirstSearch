@@ -7,11 +7,17 @@ const elastic = require('./services/elasticsearchService');
 
 var finalData;
 
-processData()
-// var updateData = setInterval(()=>{
-//     done = 0;
-//     dm.getLabels().forEach(crawler=>runScript("crawlers/"+crawler+"Crawler.js"));
-// }, toMins(5));
+// processData()
+var updateData = setInterval(()=>{
+    crawl();
+}, toMins(5));
+
+crawl();
+
+function crawl(){
+    done = 0;
+    dm.getLabels().forEach(crawler=>runScript("crawlers/"+crawler+"Crawler.js"));
+}
 
 function toMins(minutes){
     return minutes * 1000 * 60;

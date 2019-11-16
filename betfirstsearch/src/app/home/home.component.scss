@@ -1,0 +1,17 @@
+.container{
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    grid-template-rows: 10% 5% 10% 10% 5% 55% ;
+}
+.mat-sort-header-container {
+    align-items: center;
+  }
+
+
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}

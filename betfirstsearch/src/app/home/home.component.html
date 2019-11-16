@@ -1,0 +1,52 @@
+<div class="container">
+  <div class="websites-container">
+    <div class="websites-label">Websites:</div>
+    <div class="website-button-container">
+      <div class="website-button" *ngFor="let website of websites">
+        {{website.label}}
+      </div>
+    </div>
+  </div>
+  <div class="search-name-input">
+    <input [(ngModel)]="searchInput"/>
+  </div>
+  <div class="selections">
+    <div class="selections-label">
+      Selections:
+    </div>
+    <div class="selection-button-container">
+      <div class="selection-button" *ngFor="let selection of selections">{{selection.label}}</div>
+    </div>
+  </div>
+  <div class="odds">
+    <div class="odds-over">
+      Odds over <input [(ngModel)]="oddsBottomLimit" type="number"/>
+    </div>
+    <div class="odds-under">
+      Odds under <input [(ngModel)]="oddsUpperLimit" type="number"/>
+    </div>
+  </div>
+  <div class="search-button-container">
+    <div class="search-button" (click)="search()">Search</div>
+  </div>
+  <div class="result-table">
+    <table matSort (matSortChange)="sortData($event)">
+      <tr>
+        <th mat-sort-header="time">Time</th>
+        <th mat-sort-header="match">Match</th>
+        <th mat-sort-header="selection-home">1</th>
+        <th mat-sort-header="selection-draw">X</th>
+        <th mat-sort-header="selection-away">2</th>
+        <th mat-sort-header="website">Site</th>
+      </tr>
+    
+      <tr *ngFor="let dessert of sortedData">
+        <td>{{dessert.name}}</td>
+        <td>{{dessert.calories}}</td>
+        <td>{{dessert.fat}}</td>
+        <td>{{dessert.carbs}}</td>
+        <td>{{dessert.protein}}</td>
+      </tr>
+    </table>
+  </div>
+</div>

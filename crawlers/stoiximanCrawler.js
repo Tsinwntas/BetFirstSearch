@@ -61,7 +61,9 @@ async function mine(){
     }
     function mapMatch(time,name,home,draw,away){
       let match = new Match(time,name[0],name[1]);
-      match[marketsOfInterest.FT] = [parseFloat(home),parseFloat(draw),parseFloat(away)];
+      match.markets[marketsOfInterest.FT+"1"] = parseFloat(home)*100;
+      match.markets[marketsOfInterest.FT+"X"] = parseFloat(draw)*100;
+      match.markets[marketsOfInterest.FT+"2"] = parseFloat(away)*100;
       matches.push(match);
     }
     function Match(time, home, away) {
