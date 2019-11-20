@@ -4,6 +4,6 @@ export class WebsiteModel {
 
   constructor(label){
     this.label = label;
-    this.isSelected = true;
+    this.isSelected = false;
   }
 }

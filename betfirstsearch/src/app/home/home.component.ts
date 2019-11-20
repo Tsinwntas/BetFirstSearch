@@ -5,14 +5,6 @@ import {Sort} from '@angular/material/sort';
 import { WebsiteModel } from '../models/website-model';
 import { PostRequestServiceService } from '../services/post-request-service.service';
 
-export interface Dessert {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
-}
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -34,11 +26,15 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.websites = [new WebsiteModel("bet365"), new WebsiteModel("stoiximan"), new WebsiteModel("winmasters")];
     this.selections = [new SelectionModel("1",0),new SelectionModel("X",1), new SelectionModel("2",2)];
-    this.resultData = [];
-    this.sortedResultData = this.resultData.slice();
-    
+    this.setResultData([]);
   }
   
+  setResultData(data){
+    this.resultData = data;
+    this.sortedResultData = this.resultData.slice();
+  }
+
+
   toggleWebsite(index){
     this.websites[index].isSelected = !this.websites[index].isSelected;
   }
@@ -69,6 +65,7 @@ export class HomeComponent implements OnInit {
     console.log("*****************");
     this.postRequestService.search(searchQuery).subscribe(data=>{
       console.log(data);
+      this.setResultData(this.postRequestService.mapResults(data))  ;
     });
   }
   getMatchNameQuery(){
@@ -119,6 +116,10 @@ export class HomeComponent implements OnInit {
     return query;
   }
 
+  formatMatchName(match){
+    return match.home + " vs " + match.away;
+  }
+
   sortData(sort: Sort) {
     const data = this.resultData.slice();
     if (!sort.active || sort.direction === '') {
@@ -129,17 +130,19 @@ export class HomeComponent implements OnInit {
     this.sortedResultData = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        // case 'name': return compare(a.name, b.name, isAsc);
-        // case 'calories': return compare(a.calories, b.calories, isAsc);
-        // case 'fat': return compare(a.fat, b.fat, isAsc);
-        // case 'carbs': return compare(a.carbs, b.carbs, isAsc);
-        // case 'protein': return compare(a.protein, b.protein, isAsc);
+        case 'time': return compare(a.time, b.time, isAsc);
+        case 'match': return compare(this.formatMatchName(a), this.formatMatchName(b), isAsc);
+        case '1': return compare(a.selections[0].value, b.selections[0].value, isAsc);
+        case 'X': return compare(a.selections[1].value, b.selections[1].value, isAsc);
+        case '2': return compare(a.selections[2].value, b.selections[2].value, isAsc);
+        case 'site': return compare(a.website, b.website, isAsc);
         default: return 0;
       }
     });
   }
+  
 }
 
-function compare(a: number | string, b: number | string, isAsc: boolean) {
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

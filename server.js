@@ -63,7 +63,7 @@ async function processData(){
 }
 
 async function search(query){
-    await elastic.search(query);
+    return await elastic.search(query);
 }
 // server part
 const http = require('http');
@@ -77,14 +77,15 @@ const server = http.createServer((req, res) => {
     console.log("got request")
     if (req.method === 'POST') {
         let body = '';
-        req.on('data', chunk => {
+        let result = "{}";
+        req.on('data', function(chunk){
             body += chunk.toString(); // convert Buffer to string
-            await = search(body);
         });
-        req.on('end', () => {
+        req.on('end', async function() {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
-            res.end(bod);
+            result = await search(body);
+            res.end(JSON.stringify(result));
         });
         return;
     }

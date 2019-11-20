@@ -11,5 +11,6 @@ export class ResultsDataModel {
     this.time = time;
     this.home = home;
     this.away = away;
+    this.selections = [];
   }
 }
