@@ -1,52 +1,75 @@
+<body style="background-color:rgb(148, 154, 243);">
 <div class="container">
+  <div class="page-title-container">
+      <h1><i>Welcome to Bet First Search</i></h1>
+  </div>
   <div class="websites-container">
-    <div class="websites-label">Websites:</div>
-    <div class="website-button-container">
-      <div class="website-button" *ngFor="let website of websites">
-        {{website.label}}
+      <div class="websites-label">
+          <label style="font-size: 18px;"><u>Websites:</u></label>
+          <div class="website-button-container">
+              <div class="website-button" *ngFor="let website of websites; let i = index">
+                  <div *ngIf="isWebsiteSelected(i); else not_selected">
+                        <button md-button class="btn1" (click)="toggleWebsite(i)" style="margin-top:0.5%;"><i>{{website.label}}</i></button>
+                  </div>
+                  <ng-template #not_selected>
+                        <button md-button class="btn2" (click)="toggleWebsite(i)" style="margin-top:0.5%;"><i>{{website.label}}</i></button>
+                  </ng-template>
+              </div>
+          </div>
       </div>
-    </div>
   </div>
   <div class="search-name-input">
-    <input [(ngModel)]="searchInput"/>
+      <div class="search-team-label" style="margin-top:0.5%;"><u>Team Name:</u>
+          <input [(ngModel)]="searchInput" style="margin-top:0.5%;">
+      </div>
   </div>
   <div class="selections">
-    <div class="selections-label">
-      Selections:
-    </div>
-    <div class="selection-button-container">
-      <div class="selection-button" *ngFor="let selection of selections">{{selection.label}}</div>
-    </div>
+      <div class="selections-label">
+          <u>Selections:</u>
+      </div>
+      <div class="selection-button-container">
+          <div class="selection-button" *ngFor="let selection of selections; let i = index">
+              <div *ngIf="isSelectionSelected(i); else not_selected_selection">
+                  <button md-button class="btn1" (click)="toggleSelection(i)" style="margin-top:0.3%;">{{selection.label}}</button>
+              </div>
+              <ng-template #not_selected_selection>
+                  <button md-button class="btn2" (click)="toggleSelection(i)" style="margin-top:0.3%;">{{selection.label}}</button>
+              </ng-template>
+          </div>
+      </div>
   </div>
   <div class="odds">
-    <div class="odds-over">
-      Odds over <input [(ngModel)]="oddsBottomLimit" type="number"/>
-    </div>
-    <div class="odds-under">
-      Odds under <input [(ngModel)]="oddsUpperLimit" type="number"/>
-    </div>
+      <div class="odds-over">
+          <u>Odds over</u>
+          <input [(ngModel)]="oddsBottomLimit" type="number" />
+      </div>
+
+      <div class="odds-under" style="margin-top:0.5%;">
+          <u>Odds under</u>
+          <input [(ngModel)]="oddsUpperLimit" type="number" />
+      </div>
   </div>
   <div class="search-button-container">
-    <div class="search-button" (click)="search()">Search</div>
+      <button md-button class="btn2" (click)="search()" style="font-size: 16px;">Search</button>
   </div>
-  <div class="result-table">
-    <table matSort (matSortChange)="sortData($event)">
-      <tr>
-        <th mat-sort-header="time">Time</th>
-        <th mat-sort-header="match">Match</th>
-        <th mat-sort-header="selection-home">1</th>
-        <th mat-sort-header="selection-draw">X</th>
-        <th mat-sort-header="selection-away">2</th>
-        <th mat-sort-header="website">Site</th>
-      </tr>
-    
-      <tr *ngFor="let dessert of sortedData">
-        <td>{{dessert.name}}</td>
-        <td>{{dessert.calories}}</td>
-        <td>{{dessert.fat}}</td>
-        <td>{{dessert.carbs}}</td>
-        <td>{{dessert.protein}}</td>
-      </tr>
-    </table>
+  <div class="result-table" style="vertical-align: bottom;">
+      <table align="center" matSort (matSortChange)="sortData($event)">
+          <tr>
+              <th mat-sort-header="time">Time</th>
+              <th mat-sort-header="match">Match</th>
+              <th mat-sort-header="selection-home">1</th>
+              <th mat-sort-header="selection-draw">X</th>
+              <th mat-sort-header="selection-away">2</th>
+              <th mat-sort-header="website">Site</th>
+          </tr>
+
+          <tr *ngFor="let dessert of sortedData">
+              <td>{{dessert.name}}</td>
+              <td>{{dessert.calories}}</td>
+              <td>{{dessert.fat}}</td>
+              <td>{{dessert.carbs}}</td>
+              <td>{{dessert.protein}}</td>
+          </tr>
+      </table>
   </div>
 </div>

@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { SelectionModel } from '../models/selection-model.component';
 import { ResultsDataModel } from '../models/results-data-model';
-
 import {Sort} from '@angular/material/sort';
 import { WebsiteModel } from '../models/website-model';
 import { PostRequestServiceService } from '../services/post-request-service.service';
@@ -37,9 +36,23 @@ export class HomeComponent implements OnInit {
     this.selections = [new SelectionModel("1",0),new SelectionModel("X",1), new SelectionModel("2",2)];
     this.resultData = [];
     this.sortedResultData = this.resultData.slice();
+    
   }
+  
+  toggleWebsite(index){
+    this.websites[index].isSelected = !this.websites[index].isSelected;
+  }
+  
   toggleSelection(index){
     this.selections[index].isSelected = !this.selections[index].isSelected;
+  }
+
+  isWebsiteSelected(index){
+    return this.websites[index].isSelected;
+  }
+
+  isSelectionSelected(index){
+    return this.selections[index].isSelected;
   }
 
   search(){
