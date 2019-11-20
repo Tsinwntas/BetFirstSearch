@@ -4,8 +4,6 @@ import { ResultsDataModel } from '../models/results-data-model';
 import {Sort} from '@angular/material/sort';
 import { WebsiteModel } from '../models/website-model';
 
-
-
 export interface Dessert {
   calories: number;
   carbs: number;
@@ -29,11 +27,8 @@ export class HomeComponent implements OnInit {
   resultData: ResultsDataModel[];
   sortedResultData: ResultsDataModel[];
 
-  
-
   constructor() { 
   }
-
 
   ngOnInit() {
     this.websites = [new WebsiteModel("bet365"), new WebsiteModel("stoiximan"), new WebsiteModel("winmasters")];
@@ -42,11 +37,9 @@ export class HomeComponent implements OnInit {
     this.sortedResultData = this.resultData.slice();
     
   }
-
   
   toggleWebsite(index){
     this.websites[index].isSelected = !this.websites[index].isSelected;
-    console.log(this.websites[index].isSelected);
   }
   
   toggleSelection(index){
