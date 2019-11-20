@@ -4,6 +4,7 @@ import { ResultsDataModel } from '../models/results-data-model';
 
 import {Sort} from '@angular/material/sort';
 import { WebsiteModel } from '../models/website-model';
+import { PostRequestServiceService } from '../services/post-request-service.service';
 
 export interface Dessert {
   calories: number;
@@ -28,7 +29,7 @@ export class HomeComponent implements OnInit {
   resultData: ResultsDataModel[];
   sortedResultData: ResultsDataModel[];
 
-  constructor() { 
+  constructor(private postRequestService: PostRequestServiceService) { 
   }
 
   ngOnInit() {
@@ -52,6 +53,10 @@ export class HomeComponent implements OnInit {
       }
     })
     console.log(searchQuery);
+    console.log("*****************");
+    this.postRequestService.search(searchQuery).subscribe(data=>{
+      console.log(data);
+    });
   }
   getMatchNameQuery(){
     return {
@@ -79,7 +84,7 @@ export class HomeComponent implements OnInit {
   getOddsQuery() {
     let query = [];
     let gte = this.oddsBottomLimit ? this.oddsBottomLimit*1000 : 0;
-    let lte = this.oddsUpperLimit ? this.oddsUpperLimit*1000+5 : 1000;
+    let lte = this.oddsUpperLimit ? this.oddsUpperLimit*1000+5 : 1000000;
 
     let selectedOdds = [];
     this.selections.forEach(s => {if(s.isSelected) selectedOdds.push(s)});

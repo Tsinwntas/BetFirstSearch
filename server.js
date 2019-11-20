@@ -12,7 +12,7 @@ var updateData = setInterval(()=>{
     crawl();
 }, toMins(5));
 
-crawl();
+// crawl();
 
 function crawl(){
     done = 0;
@@ -62,6 +62,9 @@ async function processData(){
     await elastic.insertData(dataBreakDown);
 }
 
+async function search(query){
+    await elastic.search(query);
+}
 // server part
 const http = require('http');
 
@@ -69,6 +72,22 @@ const hostname = '127.0.0.1';
 const port = 3000;
 
 const server = http.createServer((req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    console.log("got request")
+    if (req.method === 'POST') {
+        let body = '';
+        req.on('data', chunk => {
+            body += chunk.toString(); // convert Buffer to string
+            await = search(body);
+        });
+        req.on('end', () => {
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(bod);
+        });
+        return;
+    }
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   res.end('Crawling, go away\n');

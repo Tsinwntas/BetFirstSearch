@@ -27,6 +27,19 @@ module.exports = {
       });
       await client.bulk({body:bulkBody}).catch(console.log);
       console.log("Insertion completed.")
+    },
+    search: async function(query){
+       console.log("******************************************")
+       console.log(query);
+       console.log("******************************************")
+      let q = await client.search({
+         index : index,
+         body: {
+           query: JSON.parse(query)
+         }
+       })
+       console.log(q.body.hits.hits);
+       return q.body.hits.hits;
     }
 
 
@@ -158,8 +171,79 @@ let q = await client.search({
   index : index,
   body: {
     query: 
-      {"bool":{"must":[{"bool":{"should":[{"wildcard":{"home":"*portug*"}},{"wildcard":{"away":"*portug*"}}]}},{"bool":{"should":[{"match":{"label":"bet365"}},{"match":{"label":"stoiximan"}},{"match":{"label":"winmasters"}}]}},{"bool":{"should":[{"range":{"markets.FT1":{"lte":1095,"gte":1060}}},{"range":{"markets.FTX":{"lte":1095,"gte":1060}}},{"range":{"markets.FT2":{"lte":1095,"gte":1060}}}]}}]}}
-
+    { 
+      "bool":{ 
+         "must":[ 
+            { 
+               "bool":{ 
+                  "should":[ 
+                     { 
+                        "wildcard":{ 
+                           "home":"*"
+                        }
+                     },
+                     { 
+                        "wildcard":{ 
+                           "away":"*"
+                        }
+                     }
+                  ]
+               }
+            },
+            { 
+               "bool":{ 
+                  "should":[ 
+                     { 
+                        "match":{ 
+                           "label":"bet365"
+                        }
+                     },
+                     { 
+                        "match":{ 
+                           "label":"stoiximan"
+                        }
+                     },
+                     { 
+                        "match":{ 
+                           "label":"winmasters"
+                        }
+                     }
+                  ]
+               }
+            },
+            { 
+               "bool":{ 
+                  "should":[ 
+                     { 
+                        "range":{ 
+                           "markets.FT1":{ 
+                              "lte":1000,
+                              "gte":0
+                           }
+                        }
+                     },
+                     { 
+                        "range":{ 
+                           "markets.FTX":{ 
+                              "lte":1000,
+                              "gte":0
+                           }
+                        }
+                     },
+                     { 
+                        "range":{ 
+                           "markets.FT2":{ 
+                              "lte":1000,
+                              "gte":0
+                           }
+                        }
+                     }
+                  ]
+               }
+            }
+         ]
+      }
+   }
     
   }
 })
