@@ -1,10 +1,11 @@
 .container{
+    background: url(https://i.imgur.com/AKsWw2G.jpg) no-repeat center fixed;
     text-align: center;
     width: 100vw;
     height: 100vh;
     display: grid;
+    color: #0ea50b;
     grid-template-rows: 8% 12% 5% 12% 7% 8% 48% ;
-    background-color: #40992d;
 }
 
   .button-container{
@@ -76,6 +77,7 @@ u{
   font-size: 20px;
 }
 table{
+  color: black;
   background-color: #165115;
   width: 45%;
 }
