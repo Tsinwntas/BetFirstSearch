@@ -20,7 +20,13 @@ const crawl = () => {
     page= await browser.newPage();
     await page.goto(url, {waitUntil: 'networkidle2'});
     console.log("Setting language..")
-    await languageToEnglishAndEnter();
+    try{
+      await languageToEnglishAndEnter();
+    }catch(e){
+      console.log("Failed to get panel..")
+      console.log("Trying main page..")
+      await languageToEnglishInMainPage();
+    }
     console.log("Attempting to go to upcoming..")
     await navigateToUpcoming();
     console.log("Mining..");
@@ -33,7 +39,9 @@ const crawl = () => {
   })();
 };
 async function languageToEnglishAndEnter(){
-  await page.waitForSelector('.'+classes.languages+' a');
+  await page.waitForSelector('.'+classes.languages+' a',{
+    timeout: 5000
+  });
   await page.evaluate((classes)=>{
     let languageList = document.getElementsByClassName(classes.languages)[0];
     languageList.getElementsByTagName("li")[0].children[0].click();
@@ -41,6 +49,19 @@ async function languageToEnglishAndEnter(){
   await page.waitForSelector('.'+classes.firstPanel+' a');
   await page.evaluate((classes)=>{
       document.getElementsByClassName(classes.firstPanel)[0].getElementsByTagName('a')[0].click();
+  },classes);
+}
+async function languageToEnglishInMainPage(){
+  await page.waitForSelector('.'+classes.languages_main_page);
+  await page.evaluate(async function(classes){
+    let languageList = document.getElementsByClassName(classes.languages_main_page)[0];
+    languageList.click();
+    await sleep(1000);
+    document.getElementsByClassName(classes.language_option)[0].click();
+    return;
+    async function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
   },classes);
 }
 async function navigateToUpcoming(){
@@ -127,9 +148,12 @@ async function mine(){
 
 crawl();
 
+
 var classes = {
   languages : "lpnm",
   firstPanel : "lpgb",
+  languages_main_page: "hm-DropDownSelections_DropLink",
+  language_option: "hm-DropDownSelections_Item",
   upcomingMatches : "tc-TopCouponLinkButton",
   next24Hours : "cl-TimeFilterButton",
   matchLine : "ufm-MarketGroupUpcomingCompetition",

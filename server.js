@@ -12,7 +12,7 @@ var updateData = setInterval(()=>{
     crawl();
 }, toMins(5));
 
-// crawl();
+crawl();
 
 function crawl(){
     done = 0;
