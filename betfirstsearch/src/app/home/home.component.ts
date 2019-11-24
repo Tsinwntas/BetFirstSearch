@@ -70,9 +70,9 @@ export class HomeComponent implements OnInit {
   }
   getMatchNameQuery(){
     return {
-      "should": [
-        {"wildcard": {"home": "*"+(this.searchInput ? this.searchInput+"*" : "")}},
-        {"wildcard": {"away": "*"+(this.searchInput ? this.searchInput+"*" : "")}}
+      "must": [
+        {"wildcard": {"name": "*"+(this.searchInput ? this.searchInput.toLowerCase().replace(/[^a-z0-9\s]/g,"").replace(/\s+/g,"*").replace(/[*]*$/g,"")+"*" : "")}},
+        // {"wildcard": {"away": "*"+(this.searchInput ? this.searchInput+"*" : "")}}
       ]
     }
   }

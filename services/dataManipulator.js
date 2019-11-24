@@ -104,14 +104,25 @@ function cleanUpMap(){
 }
 function renameData(data){
     data.forEach(match=>{
+        let name = getSearchName(match);
         let biggestNameHome = getBiggestName(match,"home");
         let biggestNameAway = getBiggestName(match,"away");
         match.findings.forEach(finding=>{
+            finding.name = name+""+name;
             finding.home = biggestNameHome;
             finding.away = biggestNameAway;
         })
     })
     return data;
+}
+function getSearchName(match){
+    let name = "";
+    match.findings.forEach(finding=>{
+        let currentName = (finding.home+"vs"+finding.away).toLowerCase().replace(/[^a-z0-9]/g,"");
+        if(!name.includes(currentName))
+            name+=currentName;
+    })
+    return name
 }
 function getBiggestName(match,field){
     let biggestName = "";
